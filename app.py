@@ -43,6 +43,7 @@ RUNS_316 = [
     {"date": "08/12/2025", "start": "17:31", "end": "20:30", "power_start": 116.50, "power_end": 70.72},
     {"date": "09/12/2025", "start": "09:21", "end": "17:01", "power_start": 111.60, "power_end": 71.18},
     {"date": "10/12/2025", "start": "09:49", "end": "18:08", "power_start": 113.80, "power_end": 73.28},
+    {"date": "11/12/2025", "start": "10:27", "end": "17:02", "power_start": 114.00, "power_end": 72.35},
     {"date": "12/12/2025", "start": "11:49", "end": "20:40", "power_start": 108.40, "power_end": 69.57},
 ]
 
