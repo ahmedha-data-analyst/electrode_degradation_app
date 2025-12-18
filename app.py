@@ -12,12 +12,14 @@ from datetime import datetime
 MASS_304 = [
     {"date": "01/12/2025", "cathode": 182, "anode": 183},  # Initial
     {"date": "09/12/2025", "cathode": 181, "anode": 183},
+    {"date": "17/12/2025", "cathode": 181, "anode": 183},
     # Add new measurements here
 ]
 
 MASS_316 = [
     {"date": "01/12/2025", "cathode": 225, "anode": 224},  # Initial
     {"date": "09/12/2025", "cathode": 224, "anode": 223},
+    {"date": "17/12/2025", "cathode": 225, "anode": 222},
     # Add new measurements here
 ]
 
