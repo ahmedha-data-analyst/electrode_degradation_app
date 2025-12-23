@@ -49,6 +49,37 @@ RUNS_316 = [
     {"date": "12/12/2025", "start": "11:49", "end": "20:40", "power_start": 108.40, "power_end": 69.57},
 ]
 
+# Electrode images configuration
+# before_image: The image showing the electrode before the experiment
+# after_image: The image showing the electrode after degradation
+# steel_type: "304" or "316" - used to reference the correct total hours
+ELECTRODE_IMAGES = {
+    "304_cathode": {
+        "before": "304_316_new.webp",
+        "after": "304_black.webp",
+        "label": "304 Steel - Cathode (Black)",
+        "steel_type": "304"
+    },
+    "304_anode": {
+        "before": "304_316_new.webp",
+        "after": "304_red.webp",
+        "label": "304 Steel - Anode (Red)",
+        "steel_type": "304"
+    },
+    "316_cathode": {
+        "before": "304_316_new.webp",
+        "after": "316_black.webp",
+        "label": "316 Steel - Cathode (Black)",
+        "steel_type": "316"
+    },
+    "316_anode": {
+        "before": "304_316_new.webp",
+        "after": "316_red.webp",
+        "label": "316 Steel - Anode (Red)",
+        "steel_type": "316"
+    },
+}
+
 # ============================================================================
 #                         END OF EASY UPDATE SECTION
 # ============================================================================
@@ -102,6 +133,17 @@ def get_mass_loss(mass_list: list) -> dict:
     }
 
 
+def display_mass_metric(label: str, loss: int, initial: int, current: int):
+    """Display mass loss metric with appropriate delta indicator."""
+    if loss == 0:
+        # No change - show "No change" without colored arrow
+        st.metric(label, f"{loss} g", delta="No change", delta_color="off")
+    else:
+        # Mass loss occurred - show the change with downward indicator
+        # Using negative value to show downward arrow (mass decreased)
+        st.metric(label, f"{loss} g", delta=f"{initial}g to {current}g", delta_color="inverse")
+
+
 # Page config
 st.set_page_config(
     page_title="HydroStar Electrode Degradation Experiment",
@@ -144,6 +186,23 @@ st.markdown("""
         font-weight: 600;
         border-bottom: 2px solid #a7d730;
         padding-bottom: 5px;
+    }
+    
+    .electrode-label {
+        color: #499823;
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #a7d730;
+    }
+    
+    .image-caption {
+        color: #8c919a;
+        font-size: 0.9em;
+        text-align: center;
+        font-style: italic;
+        margin-top: 5px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -201,11 +260,19 @@ with tab1:
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Cathode mass loss", f"{mass_304['loss_cathode']} g", 
-                  f"{mass_304['initial_cathode']}g to {mass_304['current_cathode']}g")
+        display_mass_metric(
+            "Cathode mass loss",
+            mass_304['loss_cathode'],
+            mass_304['initial_cathode'],
+            mass_304['current_cathode']
+        )
     with col2:
-        st.metric("Anode mass loss", f"{mass_304['loss_anode']} g",
-                  f"{mass_304['initial_anode']}g to {mass_304['current_anode']}g")
+        display_mass_metric(
+            "Anode mass loss",
+            mass_304['loss_anode'],
+            mass_304['initial_anode'],
+            mass_304['current_anode']
+        )
     with col3:
         st.metric("Total mass loss", f"{mass_304['loss_total']} g")
     with col4:
@@ -224,11 +291,19 @@ with tab2:
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Cathode mass loss", f"{mass_316['loss_cathode']} g",
-                  f"{mass_316['initial_cathode']}g to {mass_316['current_cathode']}g")
+        display_mass_metric(
+            "Cathode mass loss",
+            mass_316['loss_cathode'],
+            mass_316['initial_cathode'],
+            mass_316['current_cathode']
+        )
     with col2:
-        st.metric("Anode mass loss", f"{mass_316['loss_anode']} g",
-                  f"{mass_316['initial_anode']}g to {mass_316['current_anode']}g")
+        display_mass_metric(
+            "Anode mass loss",
+            mass_316['loss_anode'],
+            mass_316['initial_anode'],
+            mass_316['current_anode']
+        )
     with col3:
         st.metric("Total mass loss", f"{mass_316['loss_total']} g")
     with col4:
@@ -264,6 +339,49 @@ comparison_data = {
     ]
 }
 st.dataframe(pd.DataFrame(comparison_data), use_container_width=True, hide_index=True)
+
+# ============================================================================
+#                    ELECTRODE DEGRADATION IMAGES SECTION
+# ============================================================================
+st.markdown("---")
+st.markdown("## Electrode degradation images")
+st.markdown("Microscope images showing visual degradation of electrodes before and after the experiment.")
+
+# Store total hours in a dictionary for easy lookup
+total_hours = {
+    "304": total_hours_304,
+    "316": total_hours_316
+}
+
+# Display before/after images for each electrode
+for electrode_key, electrode_info in ELECTRODE_IMAGES.items():
+    st.markdown(f'<p class="electrode-label">{electrode_info["label"]}</p>', unsafe_allow_html=True)
+    
+    col_before, col_after = st.columns(2)
+    
+    # Get the total hours for this electrode's steel type
+    steel_type = electrode_info["steel_type"]
+    hours_for_this_electrode = total_hours[steel_type]
+    
+    with col_before:
+        try:
+            st.image(electrode_info["before"], use_container_width=True)
+            st.markdown('<p class="image-caption">Before experiment (new condition)</p>', unsafe_allow_html=True)
+        except Exception as e:
+            st.warning(f"Could not load before image: {electrode_info['before']}")
+    
+    with col_after:
+        try:
+            st.image(electrode_info["after"], use_container_width=True)
+            st.markdown(f'<p class="image-caption">After {hours_for_this_electrode:.1f} hours of operation</p>', unsafe_allow_html=True)
+        except Exception as e:
+            st.warning(f"Could not load after image: {electrode_info['after']}")
+    
+    st.markdown("")  # Add spacing between rows
+
+# ============================================================================
+#                         END OF IMAGES SECTION
+# ============================================================================
 
 # Visualizations at the bottom
 st.markdown("---")
