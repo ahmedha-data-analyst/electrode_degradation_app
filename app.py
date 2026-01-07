@@ -129,22 +129,22 @@ def get_mass_loss(mass_list: list) -> dict:
         "initial_anode": initial["anode"],
         "current_cathode": current["cathode"],
         "current_anode": current["anode"],
-        "loss_cathode": initial["cathode"] - current["cathode"],
-        "loss_anode": initial["anode"] - current["anode"],
-        "loss_total": (initial["cathode"] - current["cathode"]) + (initial["anode"] - current["anode"]),
+        "loss_cathode": round(initial["cathode"] - current["cathode"], 2),
+        "loss_anode": round(initial["anode"] - current["anode"], 2),
+        "loss_total": round((initial["cathode"] - current["cathode"]) + (initial["anode"] - current["anode"]), 2),
         "current_date": current["date"]
     }
 
 
-def display_mass_metric(label: str, loss: int, initial: int, current: int):
+def display_mass_metric(label: str, loss: float, initial: float, current: float):
     """Display mass loss metric with appropriate delta indicator."""
     if loss == 0:
         # No change - show "No change" without colored arrow
-        st.metric(label, f"{loss} g", delta="No change", delta_color="off")
+        st.metric(label, f"{loss:.2f} g", delta="No change", delta_color="off")
     else:
         # Mass loss occurred - show the change with downward indicator
         # Using negative value to show downward arrow (mass decreased)
-        st.metric(label, f"{loss} g", delta=f"{initial}g to {current}g", delta_color="inverse")
+        st.metric(label, f"{loss:.2f} g", delta=f"{initial}g to {current}g", delta_color="inverse")
 
 
 # Page config
@@ -277,7 +277,7 @@ with tab1:
             mass_304['current_anode']
         )
     with col3:
-        st.metric("Total mass loss", f"{mass_304['loss_total']} g")
+        st.metric("Total mass loss", f"{mass_304['loss_total']:.2f} g")
     with col4:
         st.metric("Total energy", f"{total_energy_304:.1f} Wh")
     
@@ -308,7 +308,7 @@ with tab2:
             mass_316['current_anode']
         )
     with col3:
-        st.metric("Total mass loss", f"{mass_316['loss_total']} g")
+        st.metric("Total mass loss", f"{mass_316['loss_total']:.2f} g")
     with col4:
         st.metric("Total energy", f"{total_energy_316:.1f} Wh")
     
@@ -329,16 +329,16 @@ comparison_data = {
     "304 Steel": [
         f"{total_hours_304:.1f}",
         f"{total_energy_304:.1f}",
-        f"{mass_304['loss_cathode']}",
-        f"{mass_304['loss_anode']}",
-        f"{mass_304['loss_total']}"
+        f"{mass_304['loss_cathode']:.2f}",
+        f"{mass_304['loss_anode']:.2f}",
+        f"{mass_304['loss_total']:.2f}"
     ],
     "316 Steel": [
         f"{total_hours_316:.1f}",
         f"{total_energy_316:.1f}",
-        f"{mass_316['loss_cathode']}",
-        f"{mass_316['loss_anode']}",
-        f"{mass_316['loss_total']}"
+        f"{mass_316['loss_cathode']:.2f}",
+        f"{mass_316['loss_anode']:.2f}",
+        f"{mass_316['loss_total']:.2f}"
     ]
 }
 st.dataframe(pd.DataFrame(comparison_data), use_container_width=True, hide_index=True)
