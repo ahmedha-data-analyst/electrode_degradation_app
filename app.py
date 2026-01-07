@@ -138,13 +138,18 @@ def get_mass_loss(mass_list: list) -> dict:
 
 def display_mass_metric(label: str, loss: float, initial: float, current: float):
     """Display mass loss metric with appropriate delta indicator."""
-    if loss == 0:
-        # No change - show "No change" without colored arrow
+    # Calculate actual mass change (negative = mass was lost, positive = mass was gained)
+    mass_change = round(current - initial, 2)
+    
+    if mass_change == 0:
+        # No change
         st.metric(label, f"{loss:.2f} g", delta="No change", delta_color="off")
     else:
-        # Mass loss occurred - show the change with downward indicator
-        # Using negative value to show downward arrow (mass decreased)
-        st.metric(label, f"{loss:.2f} g", delta=f"{initial}g to {current}g", delta_color="inverse")
+        # Show the mass change with correct arrow and color:
+        # - Negative change (mass lost/degradation): red down arrow
+        # - Positive change (mass gained): green up arrow
+        # delta_color="normal" makes: down arrow = red, up arrow = green
+        st.metric(label, f"{loss:.2f} g", delta=f"{mass_change:+.2f}g (was {initial}g)", delta_color="normal")
 
 
 # Page config
