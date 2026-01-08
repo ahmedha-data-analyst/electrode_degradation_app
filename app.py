@@ -38,6 +38,7 @@ RUNS_304 = [
     {"date": "10/12/2025", "start": "09:49", "end": "18:08", "power_start": 114.70, "power_end": 70.98},
     {"date": "11/12/2025", "start": "10:27", "end": "17:02", "power_start": 113.00, "power_end": 68.82},
     {"date": "12/12/2025", "start": "11:49", "end": "20:40", "power_start": 109.80, "power_end": 66.79},
+    {"date": "08/01/2026", "start": "10:27", "end": "19:40", "power_start": 121.80, "power_end": 70.28},
 ]
 
 RUNS_316 = [
@@ -50,6 +51,7 @@ RUNS_316 = [
     {"date": "10/12/2025", "start": "09:49", "end": "18:08", "power_start": 113.80, "power_end": 73.28},
     {"date": "11/12/2025", "start": "10:27", "end": "17:02", "power_start": 114.00, "power_end": 72.35},
     {"date": "12/12/2025", "start": "11:49", "end": "20:40", "power_start": 108.40, "power_end": 69.57},
+    {"date": "08/01/2026", "start": "10:27", "end": "19:40", "power_start": 117.50, "power_end": 69.80},
 ]
 
 # Electrode images configuration
